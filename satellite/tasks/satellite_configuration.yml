@@ -1,0 +1,20 @@
+---
+- name: Ansible | Automation | Satellite | Create Satellite Manifest
+  redhat.satellite.redhat_manifest:
+    name: "{{ satellite_fqdn }}"
+    username: "{{ redhat_network_username }}"
+    password: "{{ redhat_network_password }}"
+    pool_id: "{{ redhat_subscription_pool_ids }}"
+    quantity: 10
+    export: /root/core-manifest.zip
+
+- name: Ansible | Automation | Satellite | Upload Satellite Manifest
+  redhat.satellite.subscription_manifest:
+    manifest_path: /root/core-manifest.zip
+    organization: "{{ satellite_organization }}"
+    server_url: "https://{{ satellite_fqdn }}"
+    state: present
+    username: admin
+    password: "{{ satellite_admin_password }}"
+
+- name: Ansible | Automation | Satellite | Configure Settings for immediate download policy

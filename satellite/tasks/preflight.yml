@@ -1,0 +1,48 @@
+---
+- name: Automation | Ansible | Satellite | pre-flight | hostname 
+  ansible.builtin.hostname:
+    name: "{{ satellite_fqdn }}"
+
+- name: Automation | Ansible | Satellite | pre-flight | Partition {{ data_disk }} 
+  community.general.parted:
+    device: "{{ data_disk }}"
+    number: 1
+    flags: [ lvm ]
+    state: present
+    part_end: "100%"
+
+- name: Automation | Ansible | Satellite | pre-flight | Create volumegroup
+  community.general.lvg:
+    vg: "{{ satellite_vg }}"
+    state: present
+    pvs: "{{ data_disk }}1"
+
+- name: Automation | Ansible | Satellite | pre-flight | Create Logical Volumes
+  community.general.lvol:
+    vg: "{{ satellite_vg }}"
+    lv: "{{ item.name }}"
+    size: "{{ item.size }}"
+  loop: "{{ satellite_data_lvm }}"
+  ignore_errors: true
+
+- name: Automation | Ansible | Satellite | pre-flight | Create Filesystem
+  community.general.filesystem:
+    fstype: xfs
+    dev: "/dev/{{ satellite_vg }}/{{ item.name }}"
+  loop: "{{ satellite_data_lvm }}"
+
+- name: Automation | Ansible | Satellite | pre-flight | Create directories
+  ansible.builtin.file:
+    state: directory
+    mode: '0755'
+    path: "{{ item.path }}"
+  loop: "{{ satellite_data_lvm }}"
+
+  
+- name: Automation | Ansible | Satellite | pre-flight | Mount the filesystem
+  ansible.posix.mount:
+    path: "{{ item.path }}"
+    src: "/dev/{{ satellite_vg }}/{{ item.name }}"
+    state: mounted
+    fstype: xfs
+  loop: "{{ satellite_data_lvm }}"

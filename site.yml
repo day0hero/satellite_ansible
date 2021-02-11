@@ -1,0 +1,5 @@
+---
+- name: satellite
+  hosts: satellite
+  roles:
+    - satellite

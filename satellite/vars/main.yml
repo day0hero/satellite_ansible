@@ -1,0 +1,75 @@
+disconnected: false # Should be one of true | false
+
+redhat_subscription_pool_ids: #Enter subscription_id
+redhat_network_username: #Enter red hat portal username
+redhat_network_password: #Enter red hat portal password
+
+satellite_repos:
+  - rhel-7-server-rpms
+  - rhel-7-server-satellite-6.8-rpms
+  - rhel-7-server-satellite-maintenance-6-rpms
+  - rhel-server-rhscl-7-rpms
+  - rhel-7-server-ansible-2.9-rpms
+
+satellite_packages:
+  - satellite
+  - chrony
+  - firewalld
+  - vim
+
+satellite_services:
+  - 'chronyd'
+
+satellite_firewall_rules:
+  - 'RH-Satellite-6'
+
+satellite_organization: #Satellite Organization Name
+satellite_location: #Satellite Location 
+satellite_admin_password: #Satellite Admin Password
+
+data_disk: /dev/sdb
+
+satellite_fqdn: #Satellite FullyQualified Domain Name
+satellite_vg: satellite_data
+satellite_data_lvm:
+  - name: satellite_pgsql
+    size: 25G
+    vg: "{{ satellite_vg }}"
+    path: /var/lib/pgsql
+  - name: satellite_mongodb
+    size: 50G
+    vg: "{{ satellite_vg }}"
+    path: /var/lib/mongodb
+  - name: satellite_pulp_cache
+    size: 300G
+    vg: "{{ satellite_vg }}"
+    path: /var/lib/pulp/cache
+  - name: satellite_pulp
+    size: 100%FREE
+    vg: "{{ satellite_vg }}"
+    path: /var/lib/pulp
+
+product_repos:
+  - rhel-7-server-rpms
+  - rhel-7-server-extras-rpms
+  - rhel-7-server-ose-3.11-rpms
+  - rhel-7-server-ansible-2.8-rpms
+  - rhel-7-server-ansible-2.9-rpms
+  - rhel-7-server-satellite-6.8-rpms
+  - rhel-7-server-satellite-maintenance-6-rpms
+  - rhel-server-rhscl-7-rpms
+
+disconnected_yum_server:
+disconected_yum_repos:
+  - name: rhel-7-server-rpms
+    baseurl: 
+    description: Red Hat Enterprise Linux 7 RPMs
+  - name: rhel-7-server-satellite-6.8-rpms
+    baseurl:
+    description: Red Hat Satellite Server RPMs
+  - name: rhel-7-server-satellite-maintenance-6-rpms
+    baseurl:
+    description: Red Hat Satellite Maintenance RPMs
+  - name: rhel-sever-rhcscl-7-rpms
+    baseurl: 
+    description: Red Hat Software Collections

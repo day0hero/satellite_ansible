@@ -1,0 +1,14 @@
+---
+- name: Automation | Ansible | Satellite | CDN Registration
+  import_tasks: register_to_cdn.yml
+  when: not disconnected
+
+- name: Automation | Ansible | Satellite | Disconnected
+  import_tasks: disconnected_content.yml
+  when: disconnected 
+
+- name: Automation | Ansible | Satellite | Pre-Flight Configuration 
+  import_tasks: preflight.yml
+
+- name: Automation | Ansible | Satellite | Install Satellite Server
+  import_tasks: satellite_installation.yml

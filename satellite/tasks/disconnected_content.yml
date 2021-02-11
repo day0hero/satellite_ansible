@@ -1,0 +1,17 @@
+---
+- name: Automation | Ansible | Satellite | Disconnected YUM configuration
+  ansible.builtin.yum_repository:
+    name: "{{ item.name}}"
+    baseurl: "{{ item.baseurl }}"
+    enabled: 1
+    description: "{{ item.description }}"
+  loop: "{{ disconnected_yum_repos }}"
+
+- name: Automation | Ansible | Satellite | Update the system
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+  register: updated
+
+- name: Automation | Ansible | Satellite | Reboot after an update
+  ansible.builtin.reboot:

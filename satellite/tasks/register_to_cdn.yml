@@ -1,0 +1,27 @@
+---
+- name: Automation | Ansible | Satellite | Register to CDN
+  community.general.redhat_subscription:
+    state: present
+    username: "{{ redhat_network_username }}"
+    password: "{{ redhat_network_password }}"
+    pool_ids: "{{ redhat_subscription_pool_ids }}"
+
+- name: Automation | Ansible | Satellite | Disable All Repositories
+  community.general.rhsm_repository:
+    name: '*'
+    state: disabled
+
+- name: Automation | Ansible | Satellite | Enable Satellite Repositories
+  community.general.rhsm_repository:
+    name: "{{ item }}"
+    state: enabled
+  loop: "{{ satellite_repos }}"
+
+- name: Automation | Ansible | Satellite | Update the system
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+  register: updated
+
+- name: Automation | Ansible | Satellite | Reboot after an update
+  ansible.builtin.reboot:

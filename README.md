@@ -25,7 +25,7 @@ Imported ansible collections required:
 - redhat.satellite
 - community.general
 - community.posix
-A separate disk is attached for satellite data (`example: /dev/sdb`)
+- A separate disk is attached for satellite data (`example: /dev/sdb`)
 
 ## Before running the playbook:
 Make sure that the satellite FQDN is resolvable either via DNS or /etc/hosts
